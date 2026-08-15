@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>ChatBridge — Connect & Chat</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      color: #fff;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255, 55, 150, .35), transparent 35%),
+        radial-gradient(circle at 80% 80%, rgba(30, 120, 255, .35), transparent 35%),
+        linear-gradient(135deg, #080b2a, #11145c, #081b48);
+      overflow-x: hidden;
+    }
+
+    .background {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .bubble {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(2px);
+      opacity: .25;
+      animation: float 8s infinite ease-in-out;
+    }
+
+    .bubble:nth-child(1) {
+      width: 180px;
+      height: 180px;
+      background: #ff2d9b;
+      top: 10%;
+      left: -50px;
+    }
+
+    .bubble:nth-child(2) {
+      width: 230px;
+      height: 230px;
+      background: #168cff;
+      bottom: -70px;
+      right: -50px;
+      animation-delay: 2s;
+    }
+
+    .bubble:nth-child(3) {
+      width: 100px;
+      height: 100px;
+      background: #ff5fbd;
+      top: 55%;
+      right: 15%;
+      animation-delay: 4s;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0) scale(1);
+      }
+      50% {
+        transform: translateY(-30px) scale(1.08);
+      }
+    }
+
+    header {
+      width: 100%;
+      padding: 22px 7%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: .5px;
+    }
+
+    .logo span {
+      color: #ff4eb5;
+    }
+
+    .nav-login {
+      text-decoration: none;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.3);
+      padding: 10px 20px;
+      border-radius: 30px;
+      transition: .3s;
+    }
+
+    .nav-login:hover {
+      background: rgba(255,255,255,.12);
+      border-color: #ff4eb5;
+    }
+
+    .hero {
+      min-height: calc(100vh - 85px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 50px 7%;
+    }
+
+    .hero-content {
+      max-width: 850px;
+      text-align: center;
+      animation: appear 1s ease;
+    }
+
+    @keyframes appear {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 9px 17px;
+      border-radius: 30px;
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.2);
+      color: #a9d8ff;
+      margin-bottom: 25px;
+      backdrop-filter: blur(10px);
+    }
+
+    h1 {
+      font-size: clamp(45px, 8vw, 82px);
+      line-height: 1;
+      margin-bottom: 25px;
+    }
+
+    h1 .pink {
+      color: #ff4eb5;
+    }
+
+    h1 .blue {
+      color: #49a8ff;
+    }
+
+    .description {
+      max-width: 650px;
+      margin: auto;
+      color: #d7def8;
+      font-size: 18px;
+      line-height: 1.7;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-top: 35px;
+    }
+
+    .btn {
+      text-decoration: none;
+      padding: 15px 30px;
+      border-radius: 35px;
+      font-size: 16px;
+      font-weight: 700;
+      transition: .3s;
+    }
+
+    .btn-primary {
+      color: white;
+      background: linear-gradient(135deg, #ff2999, #437cff);
+      box-shadow: 0 10px 30px rgba(255, 41, 153, .25);
+    }
+
+    .btn-secondary {
+      color: white;
+      border: 1px solid rgba(255,255,255,.3);
+      background: rgba(255,255,255,.08);
+      backdrop-filter: blur(10px);
+    }
+
+    .btn:hover {
+      transform: translateY(-4px);
+    }
+
+    .features {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-top: 60px;
+    }
+
+    .feature {
+      width: 180px;
+      padding: 20px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+      backdrop-filter: blur(12px);
+    }
+
+    .feature-icon {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .feature h3 {
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
+
+    .feature p {
+      font-size: 12px;
+      color: #b9c4e8;
+      line-height: 1.5;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #9da8cc;
+      font-size: 13px;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        padding: 20px;
+      }
+
+      .hero {
+        padding: 35px 20px;
+      }
+
+      .description {
+        font-size: 16px;
+      }
+
+      .feature {
+        width: 145px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="background">
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+  </div>
+
+  <header>
+    <div class="logo">
+      Chat<span>Bridge</span>
+    </div>
+
+    <a href="login.html" class="nav-login">Login</a>
+  </header>
+
+  <main class="hero">
+
+    <section class="hero-content">
+
+      <div class="badge">
+        Welcome to ChatBridge
+      </div>
+
+      <h1>
+        Connect.<br>
+        <span class="pink">Chat.</span>
+        <span class="blue">Bridge.</span>
+      </h1>
+
+      <p class="description">
+        Meet people, start conversations, and build genuine connections
+        through one simple and modern chat platform.
+      </p>
+
+      <div class="buttons">
+        <a href="register.html" class="btn btn-primary">
+          Create Account →
+        </a>
+
+        <a href="login.html" class="btn btn-secondary">
+          Login
+        </a>
+      </div>
+
+      <div class="features">
+
+        <div class="feature">
+          <div class="feature-icon">💬</div>
+          <h3>Easy Chat</h3>
+          <p>Simple conversations in a clean interface.</p>
+        </div>
+
+        <div class="feature">
+          <div class="feature-icon">🔒</div>
+          <h3>Secure</h3>
+          <p>Your account and conversations are protected.</p>
+        </div>
+
+        <div class="feature">
+          <div class="feature-icon">🌎</div>
+          <h3>Connect</h3>
+          <p>Discover people and start meaningful chats.</p>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer>
+    © 2026 ChatBridge. Connect responsibly.
+  </footer>
+
+</body>
+  </html>
