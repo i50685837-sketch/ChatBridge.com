@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Activate Account — ChatBridge</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      color: #fff;
+      background:
+        radial-gradient(circle at 15% 15%, rgba(255, 45, 155, .35), transparent 35%),
+        radial-gradient(circle at 85% 85%, rgba(45, 125, 255, .35), transparent 35%),
+        linear-gradient(135deg, #080b2a, #11145c, #081b48);
+    }
+
+    .card {
+      width: 100%;
+      max-width: 450px;
+      padding: 35px;
+      text-align: center;
+      border-radius: 28px;
+      background: rgba(255,255,255,.09);
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow: 0 25px 70px rgba(0,0,0,.35);
+      backdrop-filter: blur(18px);
+      animation: appear .7s ease;
+    }
+
+    @keyframes appear {
+      from {
+        opacity: 0;
+        transform: translateY(25px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .logo {
+      font-size: 30px;
+      font-weight: 800;
+      margin-bottom: 25px;
+    }
+
+    .logo span {
+      color: #ff4eb5;
+    }
+
+    .icon {
+      width: 85px;
+      height: 85px;
+      margin: 0 auto 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-size: 40px;
+      background: linear-gradient(
+        135deg,
+        rgba(255,45,155,.25),
+        rgba(67,124,255,.25)
+      );
+      border: 1px solid rgba(255,255,255,.2);
+      box-shadow: 0 0 35px rgba(255,78,181,.15);
+    }
+
+    h1 {
+      font-size: 27px;
+      margin-bottom: 12px;
+    }
+
+    .description {
+      color: #c6d0ef;
+      font-size: 14px;
+      line-height: 1.7;
+      margin-bottom: 25px;
+    }
+
+    .account {
+      padding: 14px;
+      margin-bottom: 22px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.1);
+      color: #cbd6f5;
+      font-size: 13px;
+    }
+
+    .account strong {
+      color: #fff;
+      display: block;
+      margin-top: 5px;
+      word-break: break-word;
+    }
+
+    .activate-btn {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 30px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      background: linear-gradient(135deg, #ff2999, #437cff);
+      box-shadow: 0 12px 30px rgba(255,41,153,.25);
+      transition: .3s;
+    }
+
+    .activate-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .activate-btn:disabled {
+      opacity: .65;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .status {
+      display: none;
+      margin-top: 18px;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .status.error {
+      display: block;
+      color: #ffbdc9;
+      background: rgba(255,60,90,.13);
+      border: 1px solid rgba(255,60,90,.25);
+    }
+
+    .status.success {
+      display: block;
+      color: #a8f5d2;
+      background: rgba(40,220,150,.12);
+      border: 1px solid rgba(40,220,150,.25);
+    }
+
+    .note {
+      margin-top: 20px;
+      color: #8f9bc0;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .back {
+      display: block;
+      margin-top: 22px;
+      color: #7db4ff;
+      text-decoration: none;
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+
+    <div class="logo">
+      Chat<span>Bridge</span>
+    </div>
+
+    <div class="icon">🔐</div>
+
+    <h1>Activate Your Account</h1>
+
+    <p class="description">
+      Your ChatBridge account has been created.
+      Activate it to continue to your dashboard.
+    </p>
+
+    <div class="account">
+      Activation will be requested for:
+      <strong id="phoneDisplay">Loading...</strong>
+    </div>
+
+    <button class="activate-btn" id="activateBtn">
+      Activate Account
+    </button>
+
+    <div id="status" class="status"></div>
+
+    <p class="note">
+      Your registered phone number is used for the activation request.
+      You do not need to enter it again.
+    </p>
+
+    <a href="index.html" class="back">
+      ← Back to ChatBridge
+    </a>
+
+  </div>
+
+  <script>
+    const phone = sessionStorage.getItem("chatbridge_phone");
+    const userId = sessionStorage.getItem("chatbridge_user_id");
+
+    const phoneDisplay = document.getElementById("phoneDisplay");
+    const activateBtn = document.getElementById("activateBtn");
+    const statusBox = document.getElementById("status");
+
+    if (!phone || !userId) {
+      phoneDisplay.textContent = "Registration information not found";
+      activateBtn.disabled = true;
+
+      showStatus(
+        "Please create your ChatBridge account first.",
+        "error"
+      );
+    } else {
+      phoneDisplay.textContent = phone;
+    }
+
+    function showStatus(message, type) {
+      statusBox.textContent = message;
+      statusBox.className = "status " + type;
+    }
+
+    activateBtn.addEventListener("click", async () => {
+
+      if (!phone || !userId) {
+        showStatus(
+          "Registration information is missing. Please register again.",
+          "error"
+        );
+        return;
+      }
+
+      activateBtn.disabled = true;
+      activateBtn.textContent = "Processing...";
+
+      try {
+
+        /*
+          The backend should initiate the legitimate activation/payment
+          request using the phone number already stored with the account.
+        */
+        const response = await fetch("/api/activation/request", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            userId: userId
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+          throw new Error(
+            data.message || "Activation request failed."
+          );
+        }
+
+        showStatus(
+          data.message ||
+          "Activation request sent. Complete the required activation step.",
+          "success"
+        );
+
+        /*
+          Do not automatically mark the account as activated from the
+          browser. The backend/payment provider must confirm successful
+          activation first.
+        */
+
+        if (data.activated === true) {
+          setTimeout(() => {
+            sessionStorage.setItem(
+              "chatbridge_activated",
+              "true"
+            );
+
+            window.location.href = "dashboard.html";
+          }, 1000);
+        } else {
+          activateBtn.disabled = false;
+          activateBtn.textContent = "Activate Account";
+        }
+
+      } catch (error) {
+
+        showStatus(
+          error.message || "Unable to process activation.",
+          "error"
+        );
+
+        activateBtn.disabled = false;
+        activateBtn.textContent = "Activate Account";
+      }
+    });
+  </script>
+
+</body>
+                                            </html>
