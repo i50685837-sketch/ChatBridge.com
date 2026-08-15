@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account — ChatBridge</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 25px;
+      color: #fff;
+      background:
+        radial-gradient(circle at 15% 15%, rgba(255, 45, 155, .35), transparent 35%),
+        radial-gradient(circle at 85% 85%, rgba(45, 125, 255, .35), transparent 35%),
+        linear-gradient(135deg, #080b2a, #11145c, #081b48);
+    }
+
+    .card {
+      width: 100%;
+      max-width: 470px;
+      padding: 35px;
+      border-radius: 28px;
+      background: rgba(255,255,255,.09);
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow: 0 25px 70px rgba(0,0,0,.35);
+      backdrop-filter: blur(18px);
+      animation: slideUp .7s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .logo {
+      text-align: center;
+      font-size: 30px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .logo span {
+      color: #ff4eb5;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #c7d2f2;
+      margin-bottom: 28px;
+      font-size: 14px;
+    }
+
+    .input-group {
+      margin-bottom: 17px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #e5eaff;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 13px;
+      outline: none;
+      color: #fff;
+      background: rgba(255,255,255,.08);
+      transition: .3s;
+    }
+
+    input::placeholder {
+      color: #9da8c8;
+    }
+
+    input:focus {
+      border-color: #ff4eb5;
+      box-shadow: 0 0 0 3px rgba(255,78,181,.12);
+    }
+
+    .password-wrap {
+      position: relative;
+    }
+
+    .password-wrap input {
+      padding-right: 50px;
+    }
+
+    .toggle {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: none;
+      background: none;
+      color: #b8c7ef;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .policy {
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+      margin: 18px 0;
+      color: #bfc9e8;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .policy input {
+      width: auto;
+      margin-top: 2px;
+      accent-color: #ff4eb5;
+    }
+
+    .policy a {
+      color: #65aaff;
+      text-decoration: none;
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 30px;
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      background: linear-gradient(135deg, #ff2999, #437cff);
+      box-shadow: 0 10px 30px rgba(255,41,153,.22);
+      transition: .3s;
+    }
+
+    button[type="submit"]:hover {
+      transform: translateY(-2px);
+    }
+
+    button[type="submit"]:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .message {
+      display: none;
+      margin-bottom: 16px;
+      padding: 12px;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    .message.error {
+      display: block;
+      background: rgba(255,70,100,.15);
+      border: 1px solid rgba(255,70,100,.3);
+      color: #ffb5c2;
+    }
+
+    .message.success {
+      display: block;
+      background: rgba(50,220,150,.12);
+      border: 1px solid rgba(50,220,150,.25);
+      color: #9ff5d0;
+    }
+
+    .login {
+      text-align: center;
+      margin-top: 22px;
+      color: #aeb9db;
+      font-size: 14px;
+    }
+
+    .login a {
+      color: #ff62bc;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .back {
+      display: block;
+      text-align: center;
+      margin-top: 18px;
+      color: #8fa8dc;
+      text-decoration: none;
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+
+    <div class="logo">
+      Chat<span>Bridge</span>
+    </div>
+
+    <p class="subtitle">
+      Create your account and start connecting.
+    </p>
+
+    <div id="message" class="message"></div>
+
+    <form id="registerForm">
+
+      <div class="input-group">
+        <label for="fullName">Full Name</label>
+        <input
+          type="text"
+          id="fullName"
+          name="fullName"
+          placeholder="Enter your full name"
+          autocomplete="name"
+          required
+        >
+      </div>
+
+      <div class="input-group">
+        <label for="phone">Phone Number</label>
+        <input
+          type="tel"
+          id="phone"
+          name="phone"
+          placeholder="e.g. +254700000000"
+          autocomplete="tel"
+          required
+        >
+      </div>
+
+      <div class="input-group">
+        <label for="email">Email Address</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="you@example.com"
+          autocomplete="email"
+          required
+        >
+      </div>
+
+      <div class="input-group">
+        <label for="password">Password</label>
+
+        <div class="password-wrap">
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Create a password"
+            autocomplete="new-password"
+            minlength="6"
+            required
+          >
+
+          <button
+            type="button"
+            class="toggle"
+            onclick="togglePassword('password', this)"
+            aria-label="Show password"
+          >👁</button>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="confirmPassword">Confirm Password</label>
+
+        <div class="password-wrap">
+          <input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            placeholder="Confirm your password"
+            autocomplete="new-password"
+            minlength="6"
+            required
+          >
+
+          <button
+            type="button"
+            class="toggle"
+            onclick="togglePassword('confirmPassword', this)"
+            aria-label="Show password"
+          >👁</button>
+        </div>
+      </div>
+
+      <label class="policy">
+        <input type="checkbox" id="policy" required>
+
+        <span>
+          I agree to the
+          <a href="#" onclick="return false;">ChatBridge Terms</a>
+          and
+          <a href="#" onclick="return false;">Privacy Policy</a>.
+        </span>
+      </label>
+
+      <button type="submit" id="registerBtn">
+        Create Account
+      </button>
+
+    </form>
+
+    <div class="login">
+      Already have an account?
+      <a href="login.html">Login</a>
+    </div>
+
+    <a href="index.html" class="back">
+      ← Back to ChatBridge
+    </a>
+
+  </div>
+
+  <script>
+    const form = document.getElementById("registerForm");
+    const message = document.getElementById("message");
+    const registerBtn = document.getElementById("registerBtn");
+
+    function togglePassword(id, button) {
+      const input = document.getElementById(id);
+
+      if (input.type === "password") {
+        input.type = "text";
+        button.textContent = "🙈";
+        button.setAttribute("aria-label", "Hide password");
+      } else {
+        input.type = "password";
+        button.textContent = "👁";
+        button.setAttribute("aria-label", "Show password");
+      }
+    }
+
+    function showMessage(text, type) {
+      message.textContent = text;
+      message.className = "message " + type;
+    }
+
+    form.addEventListener("submit", async function(event) {
+      event.preventDefault();
+
+      const fullName = document.getElementById("fullName").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+
+      if (password !== confirmPassword) {
+        showMessage("Passwords do not match.", "error");
+        return;
+      }
+
+      if (password.length < 6) {
+        showMessage("Password must be at least 6 characters.", "error");
+        return;
+      }
+
+      registerBtn.disabled = true;
+      registerBtn.textContent = "Creating Account...";
+
+      try {
+        const response = await fetch("/api/auth/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            fullName,
+            phone,
+            email,
+            password
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+          throw new Error(data.message || "Registration failed.");
+        }
+
+        /*
+          Store only the non-sensitive identifier needed by
+          activation.html. Do not store the password here.
+        */
+        if (data.userId) {
+          sessionStorage.setItem("chatbridge_user_id", data.userId);
+        }
+
+        sessionStorage.setItem("chatbridge_phone", phone);
+        sessionStorage.setItem("chatbridge_email", email);
+
+        showMessage("Account created successfully.", "success");
+
+        setTimeout(() => {
+          window.location.href = "activation.html";
+        }, 700);
+
+      } catch (error) {
+        showMessage(
+          error.message || "Unable to create your account.",
+          "error"
+        );
+
+        registerBtn.disabled = false;
+        registerBtn.textContent = "Create Account";
+      }
+    });
+  </script>
+
+</body>
+  </html>
